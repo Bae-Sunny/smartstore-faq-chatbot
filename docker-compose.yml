@@ -1,0 +1,26 @@
+services:
+  django:
+    build:
+      context: .
+      dockerfile: Dockerfile.django
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app
+      - ./db_data:/app/db_data
+    ports:
+      - "8000:8000"
+    depends_on:
+      - chromadb
+    env_file:
+      - .env
+
+  chromadb:
+    image: chromadb/chroma:latest
+    ports:
+      - "8001:8000"
+    volumes:
+      - chromadb_data:/chroma/data
+
+volumes:
+  chromadb_data:
+  db_data:

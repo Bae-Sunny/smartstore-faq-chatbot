@@ -1,0 +1,8 @@
+Django
+djangorestframework
+openai
+chromadb
+python-dotenv
+langchain
+pandas
+requests

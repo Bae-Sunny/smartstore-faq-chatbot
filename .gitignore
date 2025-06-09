@@ -1,0 +1,29 @@
+# .env file
+.env
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+*.egg-info/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Database
+db_data/
+*.sqlite3
+
+# Docker
+# .dockerignore
+*.log
+*.pot
+
+# Operationg System
+.DS_Store
+.Trashes
+ehthumbs.db
+Thumbs.db
+*.swp
