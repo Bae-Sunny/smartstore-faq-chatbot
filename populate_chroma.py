@@ -20,7 +20,7 @@ except Exception as e:
     exit()
 
 footers = [
-    "도움말이 도움이 되었나요?", "별점1점", "별점2점", "별점3점", "별점4점", "별점5점",
+    "위 도움말이 도움이 되었나요?", "별점1점", "별점2점", "별점3점", "별점4점", "별점5점",
     "소중한 의견을 남겨주시면 보완하도록 노력하겠습니다.",
     "보내기", "관련 도움말/키워드", "도움말 닫기"
 ]
@@ -36,8 +36,8 @@ for q, a in raw_data.items():
     cleaned[q] = a.strip().replace("\n\n\n", "\n\n")
 
 splitter = RecursiveCharacterTextSplitter(
-    chunk_size=700,
-    chunk_overlap=70,
+    chunk_size=500,
+    chunk_overlap=100,
     length_function=len,
     add_start_index=True
 )

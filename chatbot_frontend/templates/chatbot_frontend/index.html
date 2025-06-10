@@ -72,6 +72,34 @@
       background-color: #e0e0e0;
     }
 
+    .message-text strong {
+      font-weight: bold;
+      color: #2c5aa0;
+    }
+
+    .message-text em {
+      font-style: italic;
+      color: #666;
+    }
+
+    .message-text .highlight {
+      background-color: #fff3cd;
+      padding: 2px 4px;
+      border-radius: 3px;
+      font-weight: 600;
+      color: #856404;
+    }
+
+    .message-text .step-number {
+      font-weight: bold;
+      color: #4CAF50;
+    }
+
+    .message-text .section-title {
+      color: #1a73e8;
+      font-weight: 600;
+    }
+
     .chat-input {
       display: flex;
       border-top: 1px solid #eee;
@@ -100,6 +128,32 @@
     .chat-input button:hover {
       background-color: #45a049;
     }
+
+    .loading {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .loading-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: #4CAF50;
+      animation: loadingDots 1.4s infinite ease-in-out both;
+    }
+
+    .loading-dot:nth-child(1) { animation-delay: -0.32s; }
+    .loading-dot:nth-child(2) { animation-delay: -0.16s; }
+
+    @keyframes loadingDots {
+      0%, 80%, 100% {
+        transform: scale(0);
+      }
+      40% {
+        transform: scale(1);
+      }
+    }
   </style>
 </head>
 <body>
@@ -122,6 +176,7 @@
     const sendButton = document.getElementById("send-button");
 
     let sessionId = null;
+    let isLoading = false;
 
     function addMessage(sender, text) {
       const box = document.createElement("div");
@@ -134,12 +189,76 @@
       chatMessages.scrollTop = chatMessages.scrollHeight;
     }
 
+    // 마크다운을 HTML로 변환하는 함수
+    function renderMarkdown(text) {
+      return text
+        // 굵은 글씨: **text** → <strong>text</strong>
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        // 이탤릭: *text* → <em>text</em>
+        .replace(/(?<!\*)\*([^*]+)\*(?!\*)/g, '<em>$1</em>')
+        // 대괄호 하이라이트: [text] → 하이라이트
+        .replace(/\[([^\]]+)\]/g, '<span class="section-title">[$1]</span>')
+        // 번호 목록 강조: "1. " → 강조된 번호
+        .replace(/^(\d+\.\s)/gm, '<span class="step-number">$1</span>')
+        // 줄바꿈: \n → <br>
+        .replace(/\n/g, '<br>')
+        // 특수 강조: 「text」 → 하이라이트
+        .replace(/「([^」]+)」/g, '<span class="highlight">$1</span>');
+    }
+
+    function addMessage(sender, text, isMarkdown = false) {
+      const box = document.createElement("div");
+      box.className = `message-box ${sender}`;
+      const msg = document.createElement("div");
+      msg.className = "message-text";
+      
+      if (isMarkdown && sender === 'bot') {
+        msg.innerHTML = renderMarkdown(text);
+      } else {
+        msg.textContent = text;
+      }
+      
+      box.appendChild(msg);
+      chatMessages.appendChild(box);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function showLoading() {
+      const box = document.createElement("div");
+      box.className = "message-box bot";
+      box.id = "loading-message";
+      const msg = document.createElement("div");
+      msg.className = "message-text";
+      msg.innerHTML = `
+        <div class="loading">
+          <div class="loading-dot"></div>
+          <div class="loading-dot"></div>
+          <div class="loading-dot"></div>
+        </div>
+      `;
+      box.appendChild(msg);
+      chatMessages.appendChild(box);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function hideLoading() {
+      const loadingMessage = document.getElementById("loading-message");
+      if (loadingMessage) {
+        loadingMessage.remove();
+      }
+    }
+
     async function sendMessage() {
       const message = userInput.value.trim();
-      if (!message) return;
+      if (!message || isLoading) return;
 
       addMessage("user", message);
       userInput.value = "";
+      isLoading = true;
+      sendButton.disabled = true;
+      sendButton.textContent = "전송중...";
+
+      showLoading();
 
       const body = {
         message: message,
@@ -154,14 +273,23 @@
         });
 
         const data = await res.json();
+        hideLoading();
+
         if (res.ok) {
           sessionId = data.session_id;
-          addMessage("bot", data.bot_response);
+          // 봇 응답은 마크다운 렌더링 적용
+          addMessage("bot", data.bot_response, true);
+
         } else {
           addMessage("bot", `오류 발생: ${data.error || "서버 오류"}`);
         }
       } catch (err) {
+        hideLoading();
         addMessage("bot", `⚠️ 네트워크 오류: ${err.message}`);
+      } finally {
+        isLoading = false;
+        sendButton.disabled = false;
+        sendButton.textContent = "보내기";
       }
     }
 
