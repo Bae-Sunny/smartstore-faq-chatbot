@@ -1,4 +1,3 @@
-// chat.js 파일 내용
 const chatMessages = document.getElementById("chat-messages");
 const userInput = document.getElementById("user-input");
 const sendButton = document.getElementById("send-button");
@@ -54,7 +53,7 @@ function showLoading() {
     </div>
   `;
     box.appendChild(msg);
-    chatMessages.scrollTop = chatMessages.scrollHeight; // 로딩 메시지 추가 후 스크롤
+    chatMessages.scrollTop = chatMessages.scrollHeight; 롤
 }
 
 function hideLoading() {
