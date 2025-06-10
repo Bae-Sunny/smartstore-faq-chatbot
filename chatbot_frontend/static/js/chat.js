@@ -33,7 +33,6 @@ function addMessage(sender, text, isMarkdown = false) {
     } else {
         msg.textContent = text;
     }
-
     box.appendChild(msg);
     chatMessages.appendChild(box);
     chatMessages.scrollTop = chatMessages.scrollHeight;
@@ -53,7 +52,8 @@ function showLoading() {
     </div>
   `;
     box.appendChild(msg);
-    chatMessages.scrollTop = chatMessages.scrollHeight; 롤
+    chatMessages.appendChild(box);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
 function hideLoading() {
