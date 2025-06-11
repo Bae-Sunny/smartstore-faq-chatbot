@@ -1,4 +1,5 @@
 ## 🛍️ 스마트스토어 FAQ 기반 RAG 챗봇 시스템
+![SmartStore FAQ ChatBot](https://github.com/user-attachments/assets/da43d5c9-a91f-40fa-8e28-b5db639d7cf7)
 
 ### 📌 프로젝트 목표 및 개요
 
@@ -88,6 +89,8 @@
 | 대화 맥락 유지 | 이전 대화 기반 질문 흐름 유지 | ✅ 응답 연속성 유지 |
 | 예외 처리 | FAQ 외 질문에 대한 대응 | ✅ “관련 없음” 안내로 무난 처리 |
 
+![2](https://github.com/user-attachments/assets/72b58b4f-e8fb-4555-8fcd-a2e8852e3c06)
+![3](https://github.com/user-attachments/assets/37b42a34-f5da-4b95-a3c4-199542840cec)
 ---
 
 ### 🏗 시스템 아키텍처
