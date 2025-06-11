@@ -28,7 +28,7 @@
 - **Frontend**: HTML5 · CSS3 · JavaScript · Streamlit  
 - **Backend**: Django · Python · LangChain · ChromaDB · OpenAI GPT  
 - **Embedding**: OpenAI Embedding API  
-- **Infra / DevOps**: Docker · Docker Compose · .env 환경변수  
+- **Infra / DevOps**: Docker · Docker Compose · .env
 
 ---
 
