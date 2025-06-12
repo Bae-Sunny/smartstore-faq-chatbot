@@ -8,4 +8,10 @@ COPY requirements.txt /app/
 
 RUN pip install --no-cache-dir -r requirements.txt
 
+RUN apt-get update && apt-get install -y netcat-traditional --no-install-recommends && rm -rf /var/lib/apt/lists/*
+
+COPY populate_chroma.py /app/populate_chroma.py
+COPY new_start.sh /app/new_start.sh
+RUN chmod +x /app/new_start.sh
+
 COPY . /app/

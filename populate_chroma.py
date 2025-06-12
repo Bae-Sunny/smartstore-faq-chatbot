@@ -80,10 +80,18 @@ col_name = "smartstore_faq_collection"
 try:
     existing = [c.name for c in chroma.list_collections()]
     if col_name in existing:
-        chroma.delete_collection(name=col_name)
-        print("기존 컬렉션 지웠어요")
-
-    col = chroma.create_collection(name=col_name)
+        collection = chroma.get_collection(name=col_name)
+        if collection.count() > 0:
+            print(f"컬렉션에 이미 데이터가 존재함. 데이터 로드를 건너 뜁니다.")
+            exit()
+        else: 
+            print("컬렉션에 데이터가 없음. 기존 컬렉션 삭제하고 재생성합니다.")
+            chroma.delete_collection(name=col_name)
+            col = chroma.create_collection(name=col_name)
+    else: 
+        print("컬렉션을 찾을 수 없음. 새로 생성하고 데이터 로드합니다.")
+        col = chroma.create_collection(name=col_name)
+            
     for i in range(0, len(chunks), batch_size):
         col.add(
             documents=chunks[i:i + batch_size],

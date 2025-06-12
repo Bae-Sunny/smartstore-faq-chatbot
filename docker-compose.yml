@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.django
-    command: python manage.py runserver 0.0.0.0:8000
+    command: ./new_start.sh
     volumes:
       - .:/app
       - ./db_data:/app/db_data
