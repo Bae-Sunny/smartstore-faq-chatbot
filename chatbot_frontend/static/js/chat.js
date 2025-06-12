@@ -74,7 +74,6 @@ async function sendMessage() {
     sendButton.textContent = "전송중...";
 
     showLoading();
-
     const body = {
         message: message,
         ...(sessionId && { session_id: sessionId })
