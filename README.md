@@ -97,37 +97,34 @@
 
 ```mermaid
 graph TD
-    subgraph "데이터 처리 (지식베이스구축)"
-        A_FAQ[FAQ 데이터 .pkl] --> B_EMBED_FAQ["OpenAI Embedding (FAQ)"]
-        B_EMBED_FAQ --> C_CHROMA_STORE[ChromaDB 벡터 저장소]
+
+    %% ① 데이터 처리 (지식 베이스 구축)
+    subgraph "① 데이터 처리"
+        A1["📄 FAQ 데이터 (.pkl from Smartstore)"] --> A2["🔎 OpenAI Embedding (FAQ)"]
+        A2 --> A3[💾 ChromaDB 벡터 저장소]
     end
 
-    subgraph "사용자 질문 처리 (RAG 흐름)"
-        D_USER_Q[사용자 질문 입력] --> E_DJANGO_API[Django API 수신]
-        E_DJANGO_API --> F_LANGCHAIN_RAG[LangChain RAG 모듈]
-        F_LANGCHAIN_RAG -->|선택된 컨텍스트| G_GPT[GPT-4o 응답 생성]
-        G_GPT --> H_N_RESPONSE[자연어 응답 생성]
-        H_N_RESPONSE --> I_FRONTEND[프론트엔드 응답 출력]
+    %% ② 사용자 질문 처리 (RAG 흐름)
+    subgraph "② 사용자 질문 처리"
+        B1[🙋 사용자 질문 입력] --> B2[📡 Django API 수신]
+        B2 --> B3[🧠 LangChain RAG 모듈]
+
+        %% LangChain RAG 모듈 내부의 상세 흐름
+        B3 --> R1[🧩 질문 임베딩]
+        R1 --> R2[📂 ChromaDB 검색]
+        R2 -->|🟢 유사도 높음| R3[📎 FAQ 청크 선택]
+        R2 -->|🔴 유사도 낮음| R4[📌 Fallback 컨텍스트 처리]
+        R3 --> R5[📤 컨텍스트 전달]
+        R4 --> R5
+
+        %% RAG 모듈의 결과가 GPT로 전달
+        R5 --> |최종 컨텍스트| B4[🤖 GPT-4o 응답 생성]
+        B4 --> B5[📝 자연어 응답 생성]
+        B5 --> B6["🖥️ 사용자에게 최종 응답 출력"]
     end
 
-    %% 핵심 연결: 지식 베이스와 RAG 모듈
-    C_CHROMA_STORE -- 지식 검색 및 활용 --> F_LANGCHAIN_RAG
-    
-    %% RAG 모듈 내부 설명 (주요 동작들을 포함)
-    subgraph F_LANGCHAIN_RAG
-        F_LANGCHAIN_RAG_A(질문 임베딩)
-        F_LANGCHAIN_RAG_B(ChromaDB 검색)
-        F_LANGCHAIN_RAG_C(FAQ 청크 선택)
-        F_LANGCHAIN_RAG_D(Fallback 컨텍스트 처리)
-
-        F_LANGCHAIN_RAG_A --> F_LANGCHAIN_RAG_B
-        F_LANGCHAIN_RAG_B -->|유사도 높음| F_LANGCHAIN_RAG_C
-        F_LANGCHAIN_RAG_B -->|유사도 낮음| F_LANGCHAIN_RAG_D
-
-        %% 중간 노드로 컨텍스트 전달 표현
-        F_LANGCHAIN_RAG_C --> CTX_C["컨텍스트 전달"] --> F_LANGCHAIN_RAG
-        F_LANGCHAIN_RAG_D --> CTX_D["컨텍스트 전달"] --> F_LANGCHAIN_RAG
-    end
+    %% 외부 연결 (지식 베이스 활용)
+    A3 -- 지식 검색 및 활용 --> R2
 ```
 ---
 
