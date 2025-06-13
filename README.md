@@ -26,7 +26,7 @@
 
 ### 🧩 기술 스택
 
-- **Frontend**: HTML5 · CSS3 · JavaScript · Streamlit  
+- **Frontend**: HTML5 · CSS3 · JavaScript 
 - **Backend**: Django · Python · LangChain · ChromaDB · OpenAI GPT  
 - **Embedding**: OpenAI Embedding API  
 - **Infra / DevOps**: Docker · Docker Compose · .env
